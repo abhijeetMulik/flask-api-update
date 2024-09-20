@@ -1,0 +1,57 @@
+{
+	"info": {
+		"_postman_id": "260c60d7-eeb5-4001-bab7-94edc02d769e",
+		"name": "flask-api-update",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23533043"
+	},
+	"item": [
+		{
+			"name": "update",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer laurhln7t4gkhlnfsp7ywho_hlsfl",
+						"type": "text"
+					},
+					{
+						"key": "session-token",
+						"value": "rbvkur79jksfu_shjhu",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user_id\": \"66ec9d39700c2045e3011e1e\",\n    \"first_name\": \"Miami\",\n    \"password\": \"billmd124Pass$\",\n    \"updated_datetime\": \"2024-08-07T22:26:12.111Z\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/user",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

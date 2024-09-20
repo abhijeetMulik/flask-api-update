@@ -1,0 +1,17 @@
+[{
+  "_id": {
+    "$oid": "66ec9d39700c2045e3011e1e"
+  },
+  "first_name": "Miami",
+  "middle_name": "Felix",
+  "last_name": "Antinez",
+  "password": "billmd124Pass$",
+  "phone": "9999999999",
+  "session_token": "rbvkur79jksfu_shjhu",
+  "created_datetime": {
+    "$date": "2023-08-07T22:26:12.111Z"
+  },
+  "updated_datetime": {
+    "$date": "2024-08-07T22:26:12.111Z"
+  }
+}]
