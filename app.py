@@ -1,8 +1,10 @@
 import pymongo
 import logging
 from bson import ObjectId
-from flask import Flask, request, jsonify
+from flask import Flask, request
 from pymongo import MongoClient
+
+from base_response import BaseResponse
 from user import User
 from dotenv import load_dotenv
 import os
@@ -36,12 +38,12 @@ def update_user():
         # Check authorization
         auth_header = request.headers.get('Authorization')
         if auth_header != AUTHORIZATION_TOKEN:
-            return jsonify({"status": "failure", "reason": "Unauthorized"}), 401
+            return BaseResponse(status="failure", reason="Unauthorized", code=401).to_json()
 
         # validate session token
         session_token = request.headers.get('session_token')
         if not session_token:
-            return jsonify({"status": "failure", "reason": "Session token missing"}), 400
+            return BaseResponse(status="failure", reason="Session token missing", code=400).to_json()
 
         # Parse JSON body:
         body = request.get_json()
@@ -50,20 +52,20 @@ def update_user():
         logger.info(f"Request Body: {body}")
 
         if not body:
-            return jsonify({"Status": "failure", "reason": "Invalid JSON"}), 400
+            return BaseResponse(status="failure", reason="Invalid JSON", code=400).to_json()
         user_id = body.get("user_id")
         if not user_id:
-            return jsonify({"Status": "failure", "reason": "Missing user_id"}), 400
+            return BaseResponse(status="failure", reason="Missing user_id", code=400).to_json()
         try:
             user_oid = ObjectId(user_id)
         except Exception as e:
-            return jsonify({"Status": "failure", "reason": "Invalid user ID format"}), 400
+            return BaseResponse(status="failure", reason="Invalid user ID format", code=400).to_json()
 
         # Check if user exists in database
         user_record = user_collection.find_one({"_id": user_oid, "session_token": session_token})
         logger.info(f"User Record: {user_record}")
         if not user_record:
-            return jsonify({"Status": "failure", "reason": "User not found or session token invalid"}), 404
+            return BaseResponse(status="failure", reason="User not found or session token invalid", code=404).to_json()
 
         # Map database record to User object
         user = User.from_dictionary(user_record)
@@ -75,19 +77,19 @@ def update_user():
         result = user_collection.update_one({"_id": user_oid}, {"$set": user.convert_to_dictionary()})
 
         if result.modified_count == 0:
-            return jsonify({"Status": "failure", "reason": "No updates made to the user"}), 400
+            return BaseResponse(status="failure", reason="No updates made to the user", code=400).to_json()
 
         # Successful update
-        return jsonify({"Status": "success"}), 200
+        return BaseResponse(status="success", reason="Record in database updated successfully !", code=200).to_json()
 
     except pymongo.errors.ConnectionFailure:
         logger.error("Database connection failed", exc_info=True)
-        return jsonify({"Status": "failure", "reason": "Database is not available"}), 500
+        return BaseResponse(status="failure", reason="Database is not available", code=500).to_json()
 
     except Exception as e:
         # Log the error
         logger.error(f"Internal server error: {str(e)}", exc_info=True)
-        return jsonify({"Status": "failure", "reason": "Internal server error"}), 500
+        return BaseResponse(status="failure", reason="Internal server error", code=500).to_json()
 
 if __name__ == '__main__':
     app.run(debug=True)
